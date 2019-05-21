@@ -1,0 +1,15 @@
+<style type="text/css">
+.menu_wrap {width: 100%; background: orange;margin-bottom: 30px;}
+.menu_wrap > ul {list-style: none;width: 80%;margin: 0 auto;padding: 0;}
+.menu_wrap > ul > li {display: inline-block;}
+.menu_wrap > ul > li > a {padding: 10px; font-size:20px; color: black; display: inline-block;}
+.menu_wrap > ul > li > a:hover {text-decoration: none;background: none;}
+</style>
+
+<div class="menu_wrap">
+    <ul>
+        <li><a href="{% url 'list_faqs' %}" >FAQ 데이터</a></li>
+        <li><a href="{% url 'list_logs' %}" >LOG 데이터</a></li>
+        <li><a href="{% url 'statistics_logs' %}">통계 데이터</a></li>
+    </ul>
+</div>

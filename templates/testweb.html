@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="/static/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+    <div id="divbox"  style="overflow-y:auto; width: 500px; height:500px; padding:10px; margin-top:150px; margin-left:300px;background-color:white ; border:3px solid darkorange; " >
+    </div>
+    <form method="post" action="http://175.193.219.203:8000/testweb/submit/" name="frm_testweb">
+{#        {% csrf_token %}#}
+        <input type="text" name="input1"  class = "input1" id="input1" size="74" style="margin-left:300px; " />
+        <!-- <input type="text" name="input2" /> -->
+        <!-- <input type="submit" name="전송" /> -->
+        <input type="button" value="전송" id="btn_submit" />
+    </form>
+<script>
+    $(document).ready(function() {
+        $('#btn_submit').click(function () {
+            $('#divbox').append('<div align="left" style="padding-right: 200px"><span>'+$('#input1').val()+'<span></div>');
+            $("#divbox").scrollTop($("#divbox")[0].scrollHeight);
+            console.log("serial"+$('form').serialize())
+            $.ajax({
+                url: 'http://http://175.193.219.203:8000/testweb/submit/',
+                type: 'post',
+                dataType: 'json',
+                data: $('form').serialize(),
+                success: function(data) {
+                    <!--$('#reponse').html(data.reponse);-->
+                    $('#divbox').append('<div align="left" style="padding-left: 200px"><span>'+data.reponse+'<span></div>');
+                    $("#divbox").scrollTop($("#divbox")[0].scrollHeight);
+                }
+            });
+
+            $('.input1').val('')
+
+            return false;
+        });
+    });
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="/static/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap.css">
+</head>
+<body>
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg .tg-21xh{font-weight:bold;background-color:#34cdf9;color:#333333;border-color:inherit;text-align:left;vertical-align:top}
+.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
+.content_wrap {width: 80%; margin: 0 auto;}
+.pagination  {text-align: center; width: 100%;}
+</style>
+
+    <script type="text/javascript" src="/static/bootstrap.js"></script>
+    <script type="text/javascript" src="/static/jquery.bootstrap.modal.forms.js"></script>
+    <link href="/static/css/bootstrap-datepicker.css" rel="stylesheet" />
+    <script type="text/javascript" src="/static/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="/static/bootstrap-datepicker.js"></script>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+
+{% include "adminpage/menu.html" %}
+
+<div class="content_wrap">
+<form action="/list_logs/" method="get">
+    <fieldset>
+        <label for="search_type">카테고리</label>
+        <select id="search_type" name="search_type">
+            <option value="1" {% if type == '1' %} selected {% endif %} >질문</option>
+            <option value="2" {% if type == '2' %} selected {% endif %} >내용</option>
+            <option value="3" {% if type == '3' %} selected {% endif %} >질문+내용</option>
+        </select>
+            <div class="radio" style="display: inline">
+            <label> <input type="radio" name="optionRadios" id="optionsRadios1" value="total" checked{% if optionRadios != 'period' %} checked {% endif %}/> 전체 </label>
+        </div>
+        <div class="radio" style="display: inline">
+            <label> <input type="radio" name="optionRadios" id="optionsRadios2" value="period" {% if optionRadios == 'period' %} checked {% endif %}/> 기간 : </label>
+            <input id="fromDate" data-provide="datepicker" data-date-format="yyyy-mm-dd" name="from_date" value="{{ from_date }}">
+            <label> ~ </label>
+            <input id="toDate" data-provide="datepicker" data-date-format="yyyy-mm-dd" name="to_date" value="{{ to_date }}">
+        </div>
+        <label>검색어 <input type="text" name="search_keyword" value="{{ keyword }}" /></label>
+        <button type="submit">검색</button>
+    </fieldset>
+</form>
+    <table class = "tg">
+    <colgroup>
+        <col width="10%">
+        <col width="10%">
+        <col width="10%">
+        <col width="35%">
+        <col width="35%">
+    </colgroup>
+        <tr>
+            <th class="tg-21xh"> 날짜 </th>
+            <th class="tg-21xh"> 시간 </th>
+            <th class="tg-21xh"> 사용자 </th>
+            <th class="tg-21xh"> 질문 </th>
+            <th class="tg-21xh"> 답변 </th>
+        </tr>
+        {%  for log in logs %}
+        <tr>
+            <td>{{ log.log_date }}</td>
+            <td>{{ log.log_time }}</td>
+            <td>{{ log.log_userid }}</td>
+            <td>{{ log.log_question }}</td>
+            <td>{{ log.log_answer }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div class="pagination">
+        <span class="step-links">
+            {% if logs.has_previous %}
+                <a href="?page=1&search_type={{ type }}&search_keyword={{ keyword }}">&laquo; first</a>
+                <a href="?page={{ logs.previous_page_number }}&search_type={{ type }}&search_keyword={{ keyword }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ logs.number }} of {{ logs.paginator.num_pages }}.
+            </span>
+
+            {% if logs.has_next %}
+                <a href="?page={{ logs.next_page_number }}&search_type={{ type }}&search_keyword={{ keyword }}">next</a>
+                <a href="?page={{ logs.paginator.num_pages }}&search_type={{ type }}&search_keyword={{ keyword }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+
+        $('input[type=radio][name=optionRadios]').on('click',function () {
+        var chkValue = $('input[type=radio][name=optionRadios]:checked').val();
+
+        if(chkValue == 'total'){
+            $('#fromDate').attr('disabled', 'disabled').val('');
+            $('#toDate').attr('disabled', 'disabled').val('');
+        }
+        else
+        {
+            $('#fromDate').removeAttr('disabled');
+            $('#toDate').removeAttr('disabled');
+        }
+    });
+</script>
+
+</html>

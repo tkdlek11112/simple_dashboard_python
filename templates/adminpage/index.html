@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="/static/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap.css">
+
+</head>
+<body>
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg .tg-21xh{font-weight:bold;background-color:#34cdf9;color:#333333;border-color:inherit;text-align:left;vertical-align:top}
+.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
+.gwd-div-157b {
+    position: absolute;
+    width: 277px;
+    height: 241px;
+    left: 430px;
+    top: 127px;
+}
+</style>
+
+    <script type="text/javascript" src="/static/bootstrap.js"></script>
+    <script type="text/javascript" src="/static/jquery.bootstrap.modal.forms.js"></script>
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+
+    <table class = "tg">
+        <tr>
+            <th class="tg-21xh"> 코드 </th>
+            <th class="tg-21xh"> 타입 </th>
+            <th class="tg-21xh"> 질문 </th>
+            <th class="tg-21xh"> 답변 </th>
+            <th class="tg-21xh"> 작업 </th>
+        </tr>
+        {%  for faq in faqs %}
+        <tr>
+            <td>{{ faq.faq_id }}</td>
+            <td>{{ faq.faq_type }}</td>
+            <td>{{ faq.faq_question }}</td>
+            <td>{{ faq.faq_answer }}</td>
+            <td><button id="button_1" class="update-faq btn btn-sm btn-primary" data-id="{% url 'update_faq' faq.pk %}">수정</button>
+                <button id="button_2" class="delete-faq btn btn-sm btn-primary" data-id="{% url 'delete_faq' faq.pk %}"> 삭제 </button>
+                </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+
+<script type="text/javascript">
+    $(function() {
+
+
+        $(".update-faq").each(function () {
+            $(this).modalForm({formURL: $(this).data('id')});
+        });
+        $(".delete-faq").each(function () {
+            $(this).modalForm({formURL: $(this).data('id')});
+        });
+
+    });
+</script>
+
+</body>
+
+</html>

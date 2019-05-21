@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="/static/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap.css">
+</head>
+<body>
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg .tg-21xh{font-weight:bold;background-color:#34cdf9;color:#333333;border-color:inherit;text-align:left;vertical-align:top}
+.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
+.content_wrap {width: 80%; margin: 0 auto;}
+.pagination  {text-align: center; width: 100%;}
+.create-faq { alignment: right;}
+</style>
+
+    <script type="text/javascript" src="/static/bootstrap.js"></script>
+    <script type="text/javascript" src="/static/jquery.bootstrap.modal.forms.js"></script>
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+
+{% include "adminpage/menu.html" %}
+
+<div class="content_wrap">
+<form action="/list_faqs/" method="get">
+    <fieldset>
+        <label for="search_type">카테고리</label>
+        <select id="search_type" name="search_type">
+            <option value="1" {% if type == '1' %} selected {% endif %} >질문</option>
+            <option value="2" {% if type == '2' %} selected {% endif %} >내용</option>
+            <option value="3" {% if type == '3' %} selected {% endif %} >질문+내용</option>
+        </select>
+        <label>검색어 <input type="text" name="search_keyword" value="{{ keyword }}" /></label>
+        <button type="submit">검색</button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button id="button_3" class="create-faq btn btn-sm btn-primary" type="button" >질문답변 새로만들기</button>
+
+
+    </fieldset>
+</form>
+    <table class = "tg">
+    <colgroup>
+        <col width="10%">
+        <col width="5%">
+        <col width="40%" span="2">
+        <col>
+    </colgroup>
+        <tr>
+            <th class="tg-21xh"> 코드 </th>
+            <th class="tg-21xh"> 타입 </th>
+            <th class="tg-21xh"> 질문 </th>
+            <th class="tg-21xh"> 답변 </th>
+            <th class="tg-21xh"> 작업 </th>
+        </tr>
+        {%  for faq in faqs %}
+        <tr>
+            <td>{{ faq.faq_id }}</td>
+            <td>{{ faq.faq_type }}</td>
+            <td>{{ faq.faq_question }}</td>
+            <td>{{ faq.faq_answer }}</td>
+            <td><button id="button_1" class="update-faq btn btn-sm btn-primary" data-id="{% url 'update_faq' faq.pk %}">수정</button>
+                <button id="button_2" class="delete-faq btn btn-sm btn-primary" data-id="{% url 'delete_faq' faq.pk %}">삭제</button>
+                </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div class="pagination">
+        <span class="step-links">
+            {% if faqs.has_previous %}
+                <a href="?page=1&search_type={{ type }}&search_keyword={{ keyword }}">&laquo; first</a>
+                <a href="?page={{ faqs.previous_page_number }}&search_type={{ type }}&search_keyword={{ keyword }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ faqs.number }} of {{ faqs.paginator.num_pages }}.
+            </span>
+
+            {% if faqs.has_next %}
+                <a href="?page={{ faqs.next_page_number }}&search_type={{ type }}&search_keyword={{ keyword }}">next</a>
+                <a href="?page={{ faqs.paginator.num_pages }}&search_type={{ type }}&search_keyword={{ keyword }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    $(function() {
+
+        $(".create-faq").modalForm({formURL: "{% url 'create_faq' %}"})
+
+        $(".update-faq").each(function () {
+            $(this).modalForm({formURL: $(this).data('id')});
+        });
+        $(".delete-faq").each(function () {
+            $(this).modalForm({formURL: $(this).data('id')});
+        });
+
+    });
+</script>
+
+</html>
